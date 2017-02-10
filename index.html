@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular-route.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<body>
+<script>
+var app = angular.module("ticketbooking", []); 
+app.controller("myCtrl", function($scope) {
+	
+	$scope.seats = ["1","2","3","4","5","6","7","8","9","10"]
+	$scope.tickets = ["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","B1","B2","B3","B4","B5","B6","B7","B8","B9","B10"];
+	$scope.tickets1 = [];
+	$scope.selectedTabId = 1;
+    $scope.addticket = function (x) {
+        $scope.errortext = ""; 
+		if(($scope.tickets1.length) < $scope.selectedseats){
+			if ($scope.tickets1.indexOf(x) == -1) {
+			$scope.tickets1.push(x);
+			
+			}
+		}else{
+			$scope.errortext = "No of seats exceded"; 
+		}
+		localStorage.setItem("Ticketarray", JSON.stringify($scope.tickets1));
+    }
+	
+	$scope.removeItem = function (x) {
+        var index = $scope.tickets1.indexOf(x);
+		$scope.tickets1.splice(index, 1);
+		localStorage.setItem("Ticketarray", JSON.stringify($scope.tickets1));
+	}
+    // $scope.bookeditems=[];
+	$scope.showConfirmPage = function (tabval) {
+	    $scope.selectedTabId = tabval;
+		
+		$scope.bookeditems = (localStorage.getItem('Ticketarray')!==null) ? JSON.parse(localStorage.getItem('Ticketarray')) : [];
+		//$scope.bookeditems =localStorage.getItem('Ticketarray');
+		$scope.totalamount=$scope.bookeditems.length;
+	}
+});
+</script>
+
+    <div ng-init="selectedTabId = 1" class="container" ng-app="ticketbooking" ng-controller="myCtrl">
+        <h2>Movie Ticket Booking</h2>
+        <section class="tab-content">
+            <div ng-show="selectedTabId == 1" class="panel panel-default">
+                <div class="panel-heading clearfix">
+
+                    <div class="form-group">
+                        <h4 class="control-label col-sm-2" for="email">Select no of seats:</h4>
+                        <div class="col-sm-10">
+                            <select class="form-control" ng-model="selectedseats" ng-options="x for x in seats" style="width:70px;margin-left:-30px;"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="seatSelection" ng-show="selectedseats">
+                        <p><!-- No of seats selected {{selectedseats}} --> Available Seats</p>
+                        <div class="seatsAvailable">
+                            <a class="holder" ng-repeat="x in tickets" ng-click="addticket(x)"><img class="img-thumbnail" style="width:38px;" src="img/seats.png" /><span class="caption">{{x}}</span></a>
+                        </div>
+                    </div>
+                    </br></br>
+                    <div ng-show="selectedseats" class="seatsBooked">
+                        Selected Seats
+                        <a class="holder" ng-repeat="x in tickets1" ng-click="removeItem(x)"><img class="img-thumbnail" style="width:38px;" src="img/seats.png" /><span class="caption">{{x}}</span></a>
+                        <span>{{errortext}}</span>
+                    </div>
+                    </br></br>
+                    <a ng-show="tickets1.length == selectedseats" ng-click="showConfirmPage(2)" class="text-center btn btn-success">Confirm Booking</a>
+                    <div id="result"></div>
+                    <!--<button type="button" class="btn btn-default" ng-href="/test1.html">Button1</button>-->
+                </div>
+            </div>
+            <div ng-show="selectedTabId == 2" class="panel panel-default">
+				<span> U have selected seats:</span>
+						<ul>
+						  <li ng-repeat="bookedseat in bookeditems">
+							<img class="img-thumbnail" style="width:38px;" src="img/seats.png" /> {{bookedseat}}.
+						  </li>
+						</ul>
+		
+			<span>3D executive seat :100rs</span>
+						Totalamount:<span>{{ 100 * totalamount }}</span>
+                <h2>Test second page view</h2><button type="button" class="btn btn-default" ng-click="showConfirmPage(1)">Back to seat selection</button>
+            </div>
+        </section>
+    </div>
+<script>
+//localStorage.setItem("lastname", "Smith");
+</script>
+<!-- <script src="js/app.js"></script>
+<script src="js/controller.js"></script> -->
+
+</body>
+</html>

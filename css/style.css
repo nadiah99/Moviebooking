@@ -1,0 +1,10 @@
+   .holder {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    width: 50px;
+	text-decoration:none
+	}
+	.caption {
+		display: block;
+	}
